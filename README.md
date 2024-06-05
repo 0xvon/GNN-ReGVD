@@ -25,19 +25,38 @@ python run.py --output_dir=./saved_models/regcn_l2_hs128_uni_ws5_lr5e4 --model_t
 	--seed 123456 2>&1 | tee $logp/training_log.txt
 ```
 
+### Only Evaluation
+
+```shell
+cd code
+python run.py --output_dir=./saved_models/regcn_l2_hs128_uni_ws5_lr5e4 --model_type=roberta --tokenizer_name=microsoft/graphcodebert-base --model_name_or_path=microsoft/graphcodebert-base \
+	--do_eval --train_data_file=../dataset/train.jsonl --eval_data_file=../dataset/valid.jsonl --test_data_file=../dataset/test.jsonl \
+	--block_size 400 --train_batch_size 128 --eval_batch_size 128 --max_grad_norm 1.0 --evaluate_during_training \
+	--gnn ReGCN --learning_rate 5e-4 --epoch 100 --hidden_size 128 --num_GNN_layers 2 --format uni --window_size 5 \
+	--seed 123456 2>&1 | tee $logp/training_log.txt
+```
+
+### Precision Score
+
+```shell
+cd evaluator
+python evaluator.py --answers ../dataset/valid.jsonl --predictions ../code/saved_models/regcn_l2_hs128_uni_ws5_lr5e4/eval.txt
+python evaluator.py --answers ../dataset/test.jsonl --predictions ../code/saved_models/regcn_l2_hs128_uni_ws5_lr5e4/test.txt
+```
+
 #### Requirements
-- Python 	3.7
-- Pytorch 	1.9
-- Transformer 	4.4
+- Python 	3.8.19
+- Pytorch 	1.9.0
+- Transformer 4.41.2
 
 ## Cite  
 Please cite the paper whenever our ReGVD is used to produce published results or incorporated into other software:
 
-	@article{NguyenReGVD,
+	@inproceedings{NguyenReGVD,
 		author={Van-Anh Nguyen and Dai Quoc Nguyen and Van Nguyen and Trung Le and Quan Hung Tran and Dinh Phung},
 		title={ReGVD: Revisiting Graph Neural Networks for Vulnerability Detection},
-		booktitle={Proceedings of ICSE 2022 (Demonstrations)},
-    		year={2022}
+		booktitle={Proceedings of the 44th International Conference on Software Engineering Companion (ICSE '22 Companion)},
+		year={2022}
 	}
 
 ## License

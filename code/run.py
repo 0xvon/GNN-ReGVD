@@ -314,6 +314,13 @@ def evaluate(args, model, tokenizer,eval_when_training=False):
     eval_acc=np.mean(labels==preds)
     eval_loss = eval_loss / nb_eval_steps
     perplexity = torch.tensor(eval_loss)
+    
+    with open(os.path.join(args.output_dir,"eval.txt"),'w') as f:
+        for example,pred in zip(eval_dataset.examples,preds):
+            if pred:
+                f.write(example.idx+'\t1\n')
+            else:
+                f.write(example.idx+'\t0\n')
             
     result = {
         "eval_loss": float(perplexity),
@@ -358,7 +365,7 @@ def test(args, model, tokenizer):
     preds=logits[:,0]>0.5
 
     test_acc=np.mean(labels==preds)
-    with open(os.path.join(args.output_dir,"predictions.txt"),'w') as f:
+    with open(os.path.join(args.output_dir,"test.txt"),'w') as f:
         for example,pred in zip(eval_dataset.examples,preds):
             if pred:
                 f.write(example.idx+'\t1\n')
